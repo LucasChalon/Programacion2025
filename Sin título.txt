@@ -1,0 +1,47 @@
+
+package com.mycompany.consumirapi;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+
+public class ConsumirAPI {
+
+    public static void main(String[] args) {
+
+        try  {      //excepcion
+
+        //Solicitar una peticion
+        URL url = new URL("http://www.omdbapi.com/?i=tt3896198&apikey=b8720183"); //creo la URL
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();  //conexion con la url 
+        conn.setRequestMethod("GET");       //metodo de peticion
+        conn.connect();         //conectamos 
+
+        //¿Funciona correctamente?
+        int responseCode = conn.getResponseCode();      //Codigo de respuesta 
+        if(responseCode != 200) {           //Indica que la solicitud tuvo exito
+                throw new RuntimeException("Ocurrio un error: " + responseCode);        //excepcion por si algo sale mal 
+        } else {
+
+            //Abrir un scanner que lee el flujo de datos 
+
+            StringBuilder informationString = new StringBuilder();  //Nos permite obtenes la informacion
+                Scanner scanner = new Scanner(url.openStream());    //escaneamos el flujo de datos de la URL
+
+                while(scanner.hasNext()) {
+                    informationString.append(scanner.nextLine());
+                }
+
+
+              scanner.close();
+              //Mostrar la informacion por consola 
+              System.out.println(informationString);      
+        }   
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
